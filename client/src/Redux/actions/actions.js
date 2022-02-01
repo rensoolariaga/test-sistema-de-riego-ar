@@ -66,9 +66,11 @@ export function login(payload) {
 };
 
 export function sendMail(payload) {
+  console.log('soy el payload de sendMail: ', payload)
   return async function(dispatch) {
     await axios.post(`${LOCALHOST}/sendmail`, payload)
     .then((response) => {
+      console.log('soy el response de sendMail: ', response)
       dispatch({
         type: SEND_MAIL,
         payload: response.data

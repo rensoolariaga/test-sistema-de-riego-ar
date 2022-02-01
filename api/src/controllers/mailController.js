@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
      
 const sendMail = async (req, res) => {
-    const { email, consult } = req.body;
+    const { email, consult, province, municipality } = req.body;
 
     const fromMail = `${email}`;
 
@@ -17,6 +17,8 @@ const sendMail = async (req, res) => {
         <ul>
             <li>Mail del usuario: ${email}</li>
             <li>Consulta: ${consult}</li>
+            <li>Provincia: ${province}</li>
+            <li>Municipio: ${municipality}</li>
         </ul>
     `;
 
