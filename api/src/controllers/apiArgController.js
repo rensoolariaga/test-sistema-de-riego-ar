@@ -1,45 +1,35 @@
-const axios = require ("axios");
+const axios = require("axios");
 // const { PROVINCE } = require("../utils/constants.js")
 
 const getLocalion = async (req, res) => {
+  // const PROVINCE = "https://apis.datos.gob.ar/georef/api/provincias?nombre=";
 
-    const PROVINCE = "https://apis.datos.gob.ar/georef/api/provincias?nombre=";
+  const { province } = req.query;
+  console.log("soy el province del body: ", province);
 
-    // const MUNICIPALITYS = "https://apis.datos.gob.ar/georef/api/provincias?campos="; 
+  try {
+    let locations = (await axios.get(`https://apis.datos.gob.ar/georef/api/provincias?nombre=${province}`)).data;
 
-    //  const MUNICIPALITYS = "https://apis.datos.gob.ar/georef/api/municipios?provincia=22&campos=id"; 
+    let locationId = locations.provincias.map((p) => p.id);
 
-    const { province } = req.body;
-    console.log('soy el province del body: ', province)
+    locationId = parseInt(locationId);
 
-    try{
-        let locations = (await axios.get(`${PROVINCE}${province}`)).data;
-        
-        console.log('soy el locations antes del .data: ', locations);
+    let infoMunicipalitys = (
+      await axios.get(
+        `https://apis.datos.gob.ar/georef/api/municipios?provincia=${locationId}&campos=id,nombre&max=200`
+      )
+    ).data;
 
-        // locations = locations.data
+    let municipalitys = infoMunicipalitys.municipios.map((m) => m);
 
-        // console.log('soy el locations despues del .data: ', locations);
-
-        let locationId = locations.provincias.map((p) => p.id);
-
-        locationId = parseInt(locationId);
-        
-        console.log('soy el locationId: ', locationId);
-
-        let municipality = (await axios.get(`https://apis.datos.gob.ar/georef/api/municipios?provincia=${locationId}&campos=id,nombre&max=200`)).data;
-
-        // municipality = municipality.data;
-
-        console.log('soy el municipality:', municipality);
-
-        res.send('andando'); 
-    }
-    catch(error) {
-        console.log(error)
-    }
-}
+    municipalitys
+      ? res.send(municipalitys)
+      : res.send("error finding municipalitys");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
-    getLocalion
-}
+  getLocalion,
+};

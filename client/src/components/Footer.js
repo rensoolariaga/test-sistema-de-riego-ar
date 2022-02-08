@@ -1,15 +1,19 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { sendMail } from "../Redux/actions/actions.js";
+import { useDispatch, useSelector } from "react-redux";
+import { sendMail, getLocation } from "../Redux/actions/actions.js";
 
 export default function Footer() {
   const dispatch = useDispatch();
+  const { municipalitys }  = useSelector((state) => state);
+  municipalitys
+    ? console.log("soy el municipalitys: ", municipalitys)
+    : console.log("municipalitys esta vacio");
 
   const [input, setInput] = useState({
     email: "",
     consult: "",
     province: "",
-    municipality: ""
+    municipality: "",
   });
 
   const [error, setError] = useState({});
@@ -40,19 +44,38 @@ export default function Footer() {
   const handlerSelectProvince = (e) => {
     setInput({
       ...input,
-      province: e.target.value
+      province: e.target.value,
+    });
+    console.log(
+      "soy el input.province de handlerSelectProvince: ",
+      input.province
+    );
+    // let valueProvince = `"${input.province}"`
+    // console.log('soy el valueProvince: ', valueProvince)
+    if (input.province.length > 2) {
+      dispatch(getLocation(input.province));
+    } else {
+      console.log("input.province esta vacio");
+    }
+  };
+
+  const handlerSelectMunicipality = (e) => {
+    setInput({
+      ...input,
+      municipality: e.target.value
     })
+    console.log('soy el input.municipality de handlerSelectMunicipality: ', input.municipality)
   }
 
   const handlerOnSubmit = (e) => {
-    console.log('soy el input del handlerOnSubmit: ', input)
+    console.log("soy el input del handlerOnSubmit: ", input);
     e.preventDefault();
     dispatch(sendMail(input));
     setInput({
       email: "",
       consult: "",
       province: "",
-      municipality: ""  
+      municipality: "",
     });
     alert("Gracias por su consulta!");
   };
@@ -86,8 +109,12 @@ export default function Footer() {
             </div>
             <div>
               <label>Provincia:</label>
-              <select name="province" value={input.province} onChange={handlerSelectProvince}>
-                <option value="" selected></option>
+              <select
+                name="province"
+                value={input.province}
+                onChange={handlerSelectProvince}
+              >
+                <option value=""></option>
                 <option value="Buenos Aires">Buenos Aires</option>
                 <option value="Catamarca">Catamarca</option>
                 <option value="Chaco">Chaco</option>
@@ -113,6 +140,19 @@ export default function Footer() {
                 <option value="Tucumán">Tucumán</option>
                 <option value="CABA">CABA</option>
               </select>
+
+              <div>
+                <select onChange={handlerSelectMunicipality}>
+                  {municipalitys &&
+                    municipalitys.map((m) => {
+                      return (
+                        <option value={m.nombre} key={m.id}>
+                          {m.nombre}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
             </div>
             <div className="mb-6 xs-12">
               <textarea

@@ -10,6 +10,7 @@ import {
     CLEAR_PROJECT_BY_ID,
     DELETE_PROJECT,
     UPDATE_PROJECT,
+    GET_LOCATION
 }  from './actionTypes';
 
 import { 
@@ -122,3 +123,48 @@ export function updateProject(payload) {
     })
   }
 }
+
+export const getLocation = (payload) => {
+  console.log('soy el payload de getLocation: ', payload)
+  return async(dispatch) => {
+    try{
+      const response = await axios.get(`${LOCALHOST}/apiArg?province=${payload}`)
+      console.log('soy el response de getLocation: ', response)
+      dispatch({
+        type: GET_LOCATION,
+        payload: response.data
+      })
+    }
+    catch(error) {
+      console.log(error)
+    }
+  } 
+}
+
+// export function getLocation(payload) {
+//   console.log('soy el payload de getLocation: ', payload)
+//   return async function(dispatch) {
+//     //  await axios.get(`${LOCALHOST}/apiArg`, {province: payload})
+//      await axios.get(`${LOCALHOST}/apiArg?province=${payload}`)
+//      .then((response) => {
+//        console.log('soy el response de getLocation: ', response)
+//        dispatch({
+//          type: GET_LOCATION,
+//          payload: response.data
+//        })
+
+//      })
+//     }
+//   }
+
+// export function updateProject(payload) {
+//   return async function(dispatch){
+//     await axios.put(`${LOCALHOST}/proyect`, payload)
+//     .then((response) => {
+//       dispatch({
+//         type: UPDATE_PROJECT,
+//         payload: response.data
+//       })
+//     })
+//   }
+// }

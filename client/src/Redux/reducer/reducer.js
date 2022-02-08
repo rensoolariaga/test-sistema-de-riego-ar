@@ -8,7 +8,7 @@ import {
     CLEAR_PROJECT_BY_ID,
     DELETE_PROJECT,
     UPDATE_PROJECT,
-
+    GET_LOCATION
 }  from '../actions/actionTypes.js';
 
 const inicialState = {
@@ -20,6 +20,7 @@ const inicialState = {
     mail: [],
     projectById: [],
     projectUpdated: [],
+    municipalitys: []
 }
 
 export default function reducer (state = inicialState, { type, payload }) {  
@@ -77,6 +78,12 @@ export default function reducer (state = inicialState, { type, payload }) {
             return {
                 ...state,
                 projectUpdated: payload
+            };
+
+        case GET_LOCATION:
+            return {
+                ...state,
+                municipalitys: payload
             };
 
         default: {

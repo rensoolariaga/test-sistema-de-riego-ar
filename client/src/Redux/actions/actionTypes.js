@@ -7,6 +7,7 @@ export const PROJECT_BY_ID = "PROJECT_BY_ID";
 export const CLEAR_PROJECT_BY_ID = "CLEAR_PROJECT_BY_ID";
 export const DELETE_PROJECT = "DELETE_PROJECT";
 export const UPDATE_PROJECT = "UPDATE_PROJECT";
+export const GET_LOCATION = "GET_LOCATION";
 
 
 
